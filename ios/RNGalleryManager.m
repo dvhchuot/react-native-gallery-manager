@@ -136,7 +136,8 @@ RCT_EXPORT_METHOD(getAssets:(NSDictionary *)params
     NSString *uit = ((PHAssetResource*)resources[0]).uniformTypeIdentifier;
     NSString *mimeType = (NSString *)CFBridgingRelease(UTTypeCopyPreferredTagWithClass((__bridge CFStringRef _Nonnull)(uit), kUTTagClassMIMEType));
     CFStringRef extension = UTTypeCopyPreferredTagWithClass((__bridge CFStringRef _Nonnull)(uit), kUTTagClassFilenameExtension);
-    
+    long long fileSize = [[(PHAssetResource*)resources[0] valueForKey:@"fileSize"] longLongValue];
+      NSLog(@"size is %lld", fileSize);
     [assets addObject:@{
                         @"type": [self getMediaType:([asset mediaType])],
                         @"width": @([asset pixelWidth]),
@@ -147,7 +148,8 @@ RCT_EXPORT_METHOD(getAssets:(NSDictionary *)params
                         @"creationDate": [asset creationDate],
                         @"uri": [self buildAssetUri:[asset localIdentifier] extension:extension lowQ:NO],
                         @"lowQualityUri": [self buildAssetUri:[asset localIdentifier] extension:extension lowQ:YES],
-                        @"duration": @([asset duration])
+                        @"duration": @([asset duration]),
+                        @"fileSize": @(fileSize) ?: @"",
                         }];
   }
   
